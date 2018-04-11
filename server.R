@@ -1,36 +1,31 @@
-library(fs)
-library(magick)
-library(dplyr)
-library(tidyr)
-library(stringr)
-
 function(input, output){
   
   inputs <- eventReactive(input$run, list(n = input$n_eyeshadows,
-                                          type = input$type))
+                                          type = input$type,
+                                          palette = input$palette))
   
   output$my_palette <- renderImage({
+    
     n <- inputs()[["n"]]
     type <- inputs()[["type"]]
+    palette <- inputs()[["palette"]]
     
     n_row <- floor(sqrt(n))
     n_col <- ceiling(n/n_row)
     
     path_folder <- case_when(type == "All eyeshadows" ~ "",
                              type == "Singles only" ~ "singles/",
-                             type == "Palettes only" ~ "palettes/")
+                             type == "Specific palette(s)" ~ "palettes/")
     
     pans_sample <- dir_ls(paste0("pans/", path_folder), recursive = TRUE, glob = "*.png")
     
-    if(n > length(pans_sample)){
-      pans_sample <- pans_sample %>%
-        sample(size = n, replace = TRUE)
-    }
-    else {
-      pans_sample <- pans_sample %>% 
-        sample(size = n)
+    if(type == "Specific palette(s)"){
+      pans_sample <- pans_sample[str_detect(pans_sample, paste(paste0(str_replace_all(palette, " ", "-"), "/"), collapse = "|"))]
     }
     
+    pans_sample <- pans_sample %>%
+      sample(size = n, replace = TRUE*(n > length(pans_sample)))
+
     pan_paths <- split(pans_sample, rep(1:n, each = 1))
     pan_paths_df <- data_frame(id = 1:n,
                                path =as.character(pan_paths))
