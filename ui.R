@@ -1,6 +1,10 @@
+# generating list of palettes to use in UI
 palettes <- dir_ls("pans/palettes/", recursive = TRUE, type = "directory")
-palettes <- palettes[str_count(palettes, "/") == 3] # only keep directories 3 levels deep, i.e. actual palettes not just brand folders
 
+# only keep directories 3 levels deep, i.e. actual palettes not just brand folders
+palettes <- palettes[str_count(palettes, "/") == 3]
+
+# split path to get palette name
 palettes_df <- data_frame(palette_path = palettes) %>%
   separate(palette_path, into = c("path", "type", "brand", "palette"), sep = "/", remove = FALSE)
 

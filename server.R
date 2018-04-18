@@ -19,16 +19,18 @@ function(input, output){
     
     pans_sample <- dir_ls(paste0("pans/", path_folder), recursive = TRUE, glob = "*.png")
     
+    # if looking at specific palettes, only take paths that contain palette name as a folder
     if(type == "Specific palette(s)"){
       pans_sample <- pans_sample[str_detect(pans_sample, paste(paste0(str_replace_all(palette, " ", "-"), "/"), collapse = "|"))]
     }
     
+    # sample number of eyeshadows
     pans_sample <- pans_sample %>%
       sample(size = n, replace = TRUE*(n > length(pans_sample)))
 
     pan_paths <- split(pans_sample, rep(1:n, each = 1))
     pan_paths_df <- data_frame(id = 1:n,
-                               path =as.character(pan_paths))
+                               path = as.character(pan_paths))
     
     read_append <- . %>%
       magick::image_read() %>%
