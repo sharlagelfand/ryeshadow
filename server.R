@@ -32,7 +32,8 @@ function(input, output){
   output$shade_selection <- renderUI({
     selectInput("shade", "Shade",
                 choices = unique(palette_df()[["shade"]]),
-                selectize = TRUE)
+                selectize = TRUE,
+                multiple = TRUE)
   })
   
 }
