@@ -1,16 +1,16 @@
 # generating list of palettes to use in UI
-palettes <- dir_ls("pans/palettes/", recursive = TRUE, type = "directory")
+pans <- dir_ls("pans/", recursive = TRUE, glob = "*.png")
 
-# only keep directories 3 levels deep, i.e. actual palettes not just brand folders
-palettes <- palettes[str_count(palettes, "/") == 3]
+eyeshadows_df <- data_frame(path = pans) %>%
+  separate(path,
+           into = c("folder", "type", "brand", "palette", "shade"),
+           sep = "/",
+           remove = FALSE) %>%
+  mutate_at(vars(brand:shade), funs(str_replace_all(., "-", " "))) %>%
+  mutate(shade = str_replace(shade, ".png", "")) 
 
-# split path to get palette name
-palettes_df <- data_frame(palette_path = palettes) %>%
-  separate(palette_path, into = c("path", "type", "brand", "palette"), sep = "/", remove = FALSE)
-
-palette_names <- str_replace_all(palettes_df[["palette"]],
-                                 "-",
-                                 " ")
+palette_names <- unique((eyeshadows_df %>%
+                           filter(type == "palettes"))[["palette"]])
 
 navbarPage(
   title = "ryeshadow",
@@ -19,7 +19,7 @@ navbarPage(
     fluidPage(
       sidebarLayout(
         sidebarPanel(
-          width = 4,
+          width = 3,
           numericInput("n_eyeshadows", label = "Number of eyeshadows:",
                        value = ""),
           
@@ -46,6 +46,19 @@ navbarPage(
   ),
   tabPanel(
     "Tracking",
-    fluidPage()
+    fluidPage(
+      sidebarLayout(
+        sidebarPanel(
+          width = 4,
+          selectInput("brand", "Brand", 
+                      choices = unique(eyeshadows_df[["brand"]]),
+                      selectize = TRUE),
+          
+          uiOutput("palette_selection"),
+          uiOutput("shade_selection")
+        ),
+        mainPanel()
+      )
+    )
   )
 )
