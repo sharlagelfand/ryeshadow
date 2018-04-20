@@ -2,14 +2,14 @@ source("components/palette_randomizer.r")
 
 function(input, output){
   
-  inputs <- eventReactive(input$run, list(n = input$n_eyeshadows,
-                                          type = input$type,
-                                          palette = input$palette))
+  randomizer_inputs <- eventReactive(input$run, list(n = input$n_eyeshadows,
+                                                     type = input$type,
+                                                     palette = input$palette))
   
   output$my_palette <- renderImage({
-    my_palette(n = inputs()[["n"]],
-               type = inputs()[["type"]],
-               palette = inputs()[["palette"]])
+    my_palette(n = randomizer_inputs()[["n"]],
+               type = randomizer_inputs()[["type"]],
+               palette = randomizer_inputs()[["palette"]])
   })
   
   brand_df <- reactive({
