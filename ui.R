@@ -39,7 +39,7 @@ navbarPage(
         sidebarPanel(
           width = 4,
           selectInput("brand", "Brand", 
-                      choices = unique(eyeshadows_df[["brand"]]),
+                      choices = c('', unique(eyeshadows_df[["brand"]])),
                       selectize = TRUE),
           
           uiOutput("palette_selection"),

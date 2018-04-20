@@ -17,9 +17,16 @@ function(input, output){
       dplyr::filter(brand == input$brand)
   })
   
+  palette_choices <- reactive({
+    if(length(unique(brand_df()[["palette"]])) > 1){
+      c('', unique(brand_df()[["palette"]]))
+    }
+    else {unique(brand_df()[["palette"]])}
+  })
+  
   output$palette_selection <- renderUI({
     selectInput("palette_wear", "Palette",
-                choices = unique(brand_df()[["palette"]]),
+                choices = palette_choices(),
                 selectize = TRUE)
     
   })
