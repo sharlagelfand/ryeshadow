@@ -40,15 +40,19 @@ function(input, output){
                 multiple = TRUE)
   })
   
-  observeEvent(input$tracking_run, {
+  shades_for_submission <- reactive({
     n_rep <- length(input$shade)
     
-    shades_for_submission <- data_frame(date = rep(ymd(input$tracking_date), n_rep),
-                                        brand = rep(input$brand, n_rep),
-                                        palette = rep(input$palette_wear, n_rep),
-                                        shade = input$shade)
+    data_frame(date = rep(ymd(input$tracking_date), n_rep),
+               brand = rep(input$brand, n_rep),
+               palette = rep(input$palette_wear, n_rep),
+               shade = input$shade)
     
-    add_shade(shades_for_submission)
   })
   
+  observeEvent(input$tracking_run, {
+    add_shade(shades_for_submission())
+  })
+  
+  output$shades_for_submission <- renderDataTable({shades_for_submission()})
 }

@@ -49,7 +49,7 @@ navbarPage(
           actionButton("tracking_run", label = "Add shade(s)!")
         ),
         mainPanel(
-         # dataTableOutput("shades_for_submission")
+          dataTableOutput("shades_for_submission")
         )
       )
     )
