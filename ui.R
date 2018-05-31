@@ -1,5 +1,3 @@
-source("components/collection.r")
-
 navbarPage(
   title = "ryeshadow",
   tabPanel(
@@ -23,7 +21,7 @@ navbarPage(
             checkboxGroupInput("palette", "",
                                choices = palette_names)),
           
-          actionButton("run", label = "Generate my palette!")
+          actionButton("randomizer_run", label = "Generate my palette!")
         ),
         
         mainPanel(
@@ -38,14 +36,21 @@ navbarPage(
       sidebarLayout(
         sidebarPanel(
           width = 4,
+          
+          dateInput("tracking_date", "Date"),
+          
           selectInput("brand", "Brand", 
                       choices = c('', unique(eyeshadows_df[["brand"]])),
                       selectize = TRUE),
           
           uiOutput("palette_selection"),
-          uiOutput("shade_selection")
+          uiOutput("shade_selection"),
+          
+          actionButton("tracking_run", label = "Add shade(s)!")
         ),
-        mainPanel()
+        mainPanel(
+         # dataTableOutput("shades_for_submission")
+        )
       )
     )
   )

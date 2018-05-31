@@ -1,10 +1,7 @@
-source("components/palette_randomizer.r")
-
 function(input, output){
-  
-  randomizer_inputs <- eventReactive(input$run, list(n = input$n_eyeshadows,
-                                                     type = input$type,
-                                                     palette = input$palette))
+  randomizer_inputs <- eventReactive(input$randomizer_run, list(n = input$n_eyeshadows,
+                                                                type = input$type,
+                                                                palette = input$palette))
   
   output$my_palette <- renderImage({
     my_palette(n = randomizer_inputs()[["n"]],
@@ -41,6 +38,17 @@ function(input, output){
                 choices = unique(palette_df()[["shade"]]),
                 selectize = TRUE,
                 multiple = TRUE)
+  })
+  
+  observeEvent(input$tracking_run, {
+    n_rep <- length(input$shade)
+    
+    shades_for_submission <- data_frame(date = rep(ymd(input$tracking_date), n_rep),
+                                        brand = rep(input$brand, n_rep),
+                                        palette = rep(input$palette_wear, n_rep),
+                                        shade = input$shade)
+    
+    add_shade(shades_for_submission)
   })
   
 }

@@ -5,3 +5,8 @@ library(tidyr)
 library(stringr)
 library(shiny)
 library(googlesheets)
+library(lubridate)
+
+source("components/palette_randomizer.r")
+source("components/tracking.r")
+source("components/collection.r")
