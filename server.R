@@ -53,6 +53,4 @@ function(input, output){
   observeEvent(input$tracking_run, {
     add_shade(shades_for_submission())
   })
-  
-  output$shades_for_submission <- renderDataTable({shades_for_submission()})
 }
